@@ -55,11 +55,21 @@ record LabGrade(String name, double score) {
  * 
  * 
  */
-record StudentGrade(String name, List<LabGrade> LabGrade, double examGrade) {
-    
-    public LabGrade worstLab() {
-        return Collections.min(LabGrade, (lg1 , lg2) -> Double.compare(lg1.score(), lg2.score()));
-  
+record StudentGrade(String name, List<LabGrade> labGrades, double examGrade) {
+
+    // Method to calculate the average lab grade
+    public double averageLabGrade() {
+        return labGrades.stream()
+                        .mapToDouble(LabGrade::score)
+                        .average()
+                        .orElse(0.0);  // Default to 0 if no lab grades
     }
+
+    // Method to calculate the final grade
+    public double finalGrade() {
+        double labAverage = averageLabGrade();
+        return (labAverage * 0.5) + (examGrade * 0.5);
+    }
+}
 }
   
